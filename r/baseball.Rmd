@@ -1,0 +1,49 @@
+---
+title: "Baseball"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+```
+
+```{r}
+baseball <- read.csv('../data/baseball.csv')
+str(baseball)
+summary(baseball)
+```
+
+RS- 
+OBP - On Base Percentage (aka OBP, On Base Average, OBA) is a measure of how often a batter reaches base.
+
+```{r}
+baseball %>% filter(Year >= 1996, Year < 2002)
+filter(baseball, Year >= 1996, Year < 2002)
+filter(baseball, League == 'AL' | League == 'NL')
+```
+
+```{r}
+baseball %>%
+  filter(Year > 1980, Year < 2000) %>%
+  group_by(Team) %>%
+  summarise(total_playoffs = sum(Playoffs, na.rm=TRUE)) %>%
+  arrange(desc(total_playoffs))
+```
+
+```{r}
+baseball %>%
+  filter(Year > 1980, Year < 2000) %>%
+  group_by(Team) %>%
+  summarise(total_wins = sum(W, na.rm=TRUE)) %>%
+  arrange(desc(total_wins))
+```
+
+```{r}
+baseball %>%
+  filter(Playoffs == 1) %>%
+  group_by(Team) %>%
+  summarise(total_wins = sum(W)) %>%
+  arrange(desc(total_wins))
+```

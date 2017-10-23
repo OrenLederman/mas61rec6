@@ -3,7 +3,6 @@ title: "Introduction to dplyr for Faster Data Manipulation in R"
 output: html_document
 ---
 
-
 ## Why do I use dplyr?
 
 * Great for data exploration and transformation
