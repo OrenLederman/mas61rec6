@@ -1,0 +1,77 @@
+---
+title: "Rec6-oren"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## System
+```{r}
+paste('Today\'s date',  sep=" ", Sys.time())
+Sys.info()
+```
+
+```{r}
+set.seed(100)
+```
+
+### imports
+```{r}
+suppressMessages(library(tibble))
+suppressMessages(library(dplyr))
+suppressMessages(library(dbplyr))
+```
+
+# Load data
+# Data originated from The analytics Edge - https://rstudio-pubs-static.s3.amazonaws.com/71693_88f6f5dea1ea4d9aa4808dd526d38429.html 
+```{r}
+df.baseball <- read.csv('../data/baseball.csv')
+head(df.baseball)
+str(df.baseball)
+summary(df.baseball)
+```
+# W - wins
+# Playoffs - got to the payloff or not
+# RS (runs scored)
+# RA (runs allowed)
+```{r}
+baseball <- tbl_df(df.baseball)
+head(baseball)
+class(baseball)
+```
+
+```{r}
+#baseball_1996_2001 <- subset(baseball, Year < 2002 & Year >= 1996)
+#filter(baseball, Year==1, DayofMonth==1)
+baseball_1996_2001 <- baseball %>%
+    select(W, Team, Year, Playoffs) %>%
+    filter(Year >= 1996, Year < 2002)
+```
+
+```{r}
+head(baseball_1996_2001)
+count(filter(baseball_1996_2001, Playoffs == 1))
+unique(baseball_1996_2001$Team)
+
+baseball_1996_2001 %>%
+    group_by(Team) %>%
+    summarise(avg_win = mean(W, na.rm=TRUE)) %>%
+    arrange(desc(avg_win))
+
+baseball %>%
+    group_by(Team) %>%
+    summarise(total_playoffs = sum(Playoffs, na.rm=TRUE)
+              , cnt = n()
+              , avg_win = mean(W, na.rm=TRUE)
+              , sum_win = sum(W, na.rm=TRUE)) %>%
+    arrange(desc(total_playoffs))
+
+baseball %>%
+    group_by(Team, Playoffs) %>%
+    summarise(cnt = n()
+              , avg_win = mean(W, na.rm=TRUE)
+              , sum_win = sum(W, na.rm=TRUE)) %>%
+    arrange(Team,Playoffs)
+```
